@@ -26,7 +26,7 @@ void yyerror(const char * s){
 %token <a> LPR RPR
 %token <a> NUMBER VAR
 %token <a> SIN COS EXP LN
-%token <a> TAN SQRT
+%token <a> TAN SQRT ASIN ACOS ATAN
 %token NEXTLINE
 
 %left ADD SUB
@@ -39,7 +39,7 @@ void yyerror(const char * s){
 %%
 
 input:/*nothing*/
-|input node NEXTLINE {printf("%s\n",$2.der);}
+|input node NEXTLINE {printf("%s\n",$2.der);free($2.der);free($2.func);}
 ;
 
 node:
@@ -90,6 +90,18 @@ VAR {$$.func = $1.der; $$.der=strdup("1");}
                    $$.der = malloc(1024);
                    sprintf($$.func,"tan(%s)",$3.func);
                    sprintf($$.der,"(1/((cos(%s))^2))*%s",$3.func,$3.der);}
+|ASIN LPR node RPR {$$.func = malloc(1024);
+                    $$.der = malloc(1024);
+                    sprintf($$.func,"asin(%s)",$3.func);
+                    sprintf($$.der,"(1/sqrt(1-(%s)^2))*%s",$3.func,$3.der);}
+|ACOS LPR node RPR {$$.func = malloc(1024);
+                    $$.der = malloc(1024);
+                    sprintf($$.func,"acos(%s)",$3.func);
+                    sprintf($$.der,"-(1/sqrt(1-(%s)^2))*%s",$3.func,$3.der);}
+|ATAN LPR node RPR {$$.func = malloc(1024);
+                    $$.der = malloc(1024);
+                    sprintf($$.func,"atan(%s)",$3.func);
+                    sprintf($$.der,"(1/(1+(%s)^2))*%s",$3.func,$3.der);}
 |SQRT LPR node RPR {$$.func = malloc(1024);
                    $$.der = malloc(1024);
                    sprintf($$.func,"sqrt(%s)",$3.func);
