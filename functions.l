@@ -17,6 +17,8 @@ ln {yylval.a.func = strdup(yytext); return LN;}
 
 tan {yylval.a.func = strdup(yytext); return TAN;}
 sqrt {yylval.a.func = strdup(yytext); return SQRT;}
+asin {yylval.a.func = strdup(yytext); return ASIN;}
+acos {yylval.a.func = strdup(yytext); return ACOS;}
 
 "+" {yylval.a.func = strdup(yytext); return ADD;}
 "-" {yylval.a.func = strdup(yytext); return SUB;}
