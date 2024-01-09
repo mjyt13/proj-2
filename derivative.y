@@ -10,8 +10,6 @@ void yyerror(const char * s){
     fprintf(stderr,"%s\n",s);
 };
 
-//"[" {yylval.a.func = strdup(yytext); return SBR;}
-//"]" {yylval.a.func = strdup(yytext); return EBR;}
 %}
 
 %union{
@@ -44,7 +42,7 @@ input:/*nothing*/
 
 node:
 
-VAR {$$.func = $1.der; $$.der=strdup("1");}
+VAR {$$.func = $1.func; $$.der=strdup("1");}
 
 |node ADD node {$$.func = malloc(1024);$$.der=malloc(1024);
                 sprintf($$.func,"(%s+%s)",$1.func,$3.func);
@@ -54,9 +52,9 @@ VAR {$$.func = $1.der; $$.der=strdup("1");}
                 sprintf($$.der,"(%s-%s)",$1.der,$3.der);}
 |node MUL node {$$.func = malloc(1024);$$.der=malloc(1024);
                 sprintf($$.func,"(%s*%s)",$1.func,$3.func);
-                sprintf($$.der,"(%s*%s)+(%s*%s)",$1.der,$3.func,$1.func,$3.der);}
+                sprintf($$.der,"((%s*%s)+(%s*%s))",$1.der,$3.func,$1.func,$3.der);}
 |node DIV node {$$.func = malloc(1024);$$.der=malloc(1024);
-                sprintf($$.func,"(%s+%s)",$1.func,$3.func);
+                sprintf($$.func,"(%s/%s)",$1.func,$3.func);
                 sprintf($$.der,"((%s*%s)-(%s*%s))/((%s)^2)",$1.der,$3.func,$1.func,$3.der,$3.func);}
 
 |LPR node RPR {$$.func = $2.func; $$.der = $2.der;}
@@ -114,7 +112,7 @@ VAR {$$.func = $1.der; $$.der=strdup("1");}
 |num {$$.func = $1.func; $$.der = $1.der;}
 ;
 
-num: NUMBER {$$.func = malloc(16); sprintf($$.func,"%.2f",$1.num); sprintf($$.der,"%.2f",0.0);};
+num: NUMBER {$$.func = malloc(16); $$.der = malloc(16); sprintf($$.func,"%.2f",$1.num); sprintf($$.der,"%.2f",0.0);};
 
 %%
 

@@ -6,9 +6,9 @@
 
 %%
 
-[0-9]+ {yylval.a.num = atof(yytext); return NUMBER;}
+[0-9]+ {yylval.a.num = atof(yytext);yylval.a.func = strdup(yytext); return NUMBER;}
 
-x {yylval.a.der = strdup(yytext); return VAR;}
+x {yylval.a.func = strdup(yytext); return VAR;}
 
 sin {yylval.a.func = strdup(yytext); return SIN;}
 cos {yylval.a.func = strdup(yytext); return COS;}
