@@ -7,6 +7,18 @@
 %%
 
 [0-9]+ {yylval.a.num = atof(yytext);yylval.a.func = strdup(yytext); return NUMBER;}
+/* to be honest, i am not so sure that we should make from int and float numbers the same token */
+[1-9][0-9]*"."[0-9]+ {yylval.a.num = atof(yytext);yylval.a.func = strdup(yytext); return NUMBER;}
+
+"+" {yylval.a.func = strdup(yytext); return ADD;}
+"-" {yylval.a.func = strdup(yytext); return SUB;}
+"*" {yylval.a.func = strdup(yytext); return MUL;}
+"/" {yylval.a.func = strdup(yytext); return DIV;}
+"^" {yylval.a.func = strdup(yytext); return POW;}
+
+
+"(" {yylval.a.func = strdup(yytext); return OPBR;}
+")" {yylval.a.func = strdup(yytext); return CLBR;}
 
 x {yylval.a.func = strdup(yytext); return VAR;}
 
@@ -21,16 +33,7 @@ asin {yylval.a.func = strdup(yytext); return ASIN;}
 acos {yylval.a.func = strdup(yytext); return ACOS;}
 atan {yylval.a.func = strdup(yytext); return ATAN;}
 
-"+" {yylval.a.func = strdup(yytext); return ADD;}
-"-" {yylval.a.func = strdup(yytext); return SUB;}
-"*" {yylval.a.func = strdup(yytext); return MUL;}
-"/" {yylval.a.func = strdup(yytext); return DIV;}
-"^" {yylval.a.func = strdup(yytext); return POW;}
-
-"(" {yylval.a.func = strdup(yytext); return LPR;}
-")" {yylval.a.func = strdup(yytext); return RPR;}
-
-"\n" return NEXTLINE;
+"\n" return EOL;
 
 [ \t] ;
 
